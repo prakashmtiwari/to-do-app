@@ -1,0 +1,26 @@
+services:
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile.front
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: on-failure
+    networks:
+      - todo_net
+
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.back
+    ports:
+      - "5000:5000"
+    restart: on-failure
+    networks:
+      - todo_net
+
+networks:
+  todo_net:
+    driver: bridge
