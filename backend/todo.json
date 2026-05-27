@@ -1,0 +1,18 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "uuid": "d7fa0c1e-4c2e-4aab-92ab-59421915c9df",
+      "hash": "e0eccc8896cc",
+      "name": "Buy Groceries",
+      "description": "From Chajarsi"
+    },
+    {
+      "id": 1,
+      "uuid": "69d86070-c836-47d8-be1c-cbaadd1bf111",
+      "hash": "6e31262b83bc",
+      "name": "Buy something",
+      "description": "none"
+    }
+  ]
+}

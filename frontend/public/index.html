@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Todo List</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    h1 { font-size: 2rem; margin-bottom: 1.5rem; color: #38bdf8; }
+    form {
+      background: #1e293b;
+      padding: 1.5rem;
+      border-radius: 12px;
+      max-width: 500px;
+      margin-bottom: 2rem;
+    }
+    label { display: block; margin-bottom: 0.3rem; font-size: 0.85rem; color: #94a3b8; }
+    input, textarea {
+      width: 100%; padding: 0.6rem 0.8rem;
+      background: #0f172a; border: 1px solid #334155;
+      border-radius: 8px; color: #e2e8f0;
+      margin-bottom: 1rem; font-size: 0.95rem;
+    }
+    textarea { resize: vertical; min-height: 80px; }
+    button {
+      background: #38bdf8; color: #0f172a;
+      border: none; padding: 0.7rem 1.5rem;
+      border-radius: 8px; font-weight: 700;
+      cursor: pointer; font-size: 1rem;
+    }
+    button:hover { background: #7dd3fc; }
+    .todo-card {
+      background: #1e293b; border-radius: 10px;
+      padding: 1rem 1.2rem; margin-bottom: 1rem;
+      max-width: 500px; border-left: 4px solid #38bdf8;
+    }
+    .todo-card h3 { color: #38bdf8; margin-bottom: 0.4rem; }
+    .meta { font-size: 0.78rem; color: #64748b; margin-top: 0.5rem; }
+    .meta span { display: block; }
+  </style>
+</head>
+<body>
+  <h1>📝 Todo List</h1>
+
+  <form id="todoForm">
+    <label>Item Name</label>
+    <input type="text" name="name" placeholder="e.g. Buy groceries" required />
+
+    <label>Item Description</label>
+    <textarea name="description" placeholder="Describe the task..."></textarea>
+
+    <button type="submit">Add Todo</button>
+  </form>
+
+  <div id="todoList"></div>
+
+  <script>
+    const form = document.getElementById('todoForm');
+    const list = document.getElementById('todoList');
+
+    async function loadTodos() {
+      const res = await fetch('/todos');
+      const todos = await res.json();
+      list.innerHTML = todos.map(renderCard).join('');
+    }
+
+    function renderCard(todo) {
+      return `
+        <div class="todo-card">
+          <h3>${todo.name}</h3>
+          <p>${todo.description || '<em>No description</em>'}</p>
+          <div class="meta">
+            <span>🆔 ID: ${todo.id}</span>
+            <span>🔑 UUID: ${todo.uuid}</span>
+            <span>#️⃣ Hash: ${todo.hash}</span>
+          </div>
+        </div>`;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+      const res = await fetch('/todo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const json = await res.json();
+      if (json.success) {
+        list.insertAdjacentHTML('afterbegin', renderCard(json.todo));
+        form.reset();
+      }
+    });
+
+    loadTodos();
+  </script>
+</body>
+</html>
