@@ -13,6 +13,13 @@
       "hash": "6e31262b83bc",
       "name": "Buy something",
       "description": "none"
+    },
+    {
+      "id": 1,
+      "uuid": "5941c6a6-c8b0-4c16-9d34-bac54700da53",
+      "hash": "21bd774915e0",
+      "name": "Policy Type",
+      "description": "none"
     }
   ]
 }

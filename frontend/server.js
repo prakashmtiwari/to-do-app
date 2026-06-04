@@ -3,10 +3,13 @@ const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
 const path = require('path');
 const fetch = require('node-fetch');
-
+require('dotenv').config();
 
 const app = express();
-const PORT = 3000;
+const BACKENDPORT = process.env.BACKENDPORT || 3000;
+const BACKENDHOST = process.env.BACKENDHOST || 'localhost';
+
+const PORT = process.env.PORT || 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -37,7 +40,7 @@ app.post('/todo', async (req, res) => {
   try {
     // Forward to Flask backend
     console.log('Forwarding to Flask:', todo);
-    const flaskRes = await fetch('http://backend:5000/todos', {
+    const flaskRes = await fetch(`http://${BACKENDHOST}:${BACKENDPORT}/todos`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(todo)
@@ -55,7 +58,7 @@ app.post('/todo', async (req, res) => {
 //get all todos
 app.get('/todos', async (req, res) => {
   try {
-    const flaskRes = await fetch('http://backend:5000/todos');
+    const flaskRes = await fetch(`http://${BACKENDHOST}:${BACKENDPORT}/todos`);
     const flaskData = await flaskRes.json();
     res.json(flaskData);
   } catch (err) {
