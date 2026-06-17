@@ -1,0 +1,66 @@
+pipeline {
+    agent any
+
+    environment {
+        APP_DIR = "/home/ubuntu/to-do-app/fronted"
+        SERVICE_NAME = "frontend.service"
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Deploy Code') {
+            steps {
+                sh '''
+                    rsync -av --delete \
+                    --exclude='.git' \
+                    --exclude='node-modules' \
+                    ./ $APP_DIR/
+                '''
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    cd $APP_DIR
+                    /home/ubuntu/.nvm/versions/node/v22.22.3/bin/npm ci 
+                '''
+            }
+        }
+
+        stage('Restart Application') {
+            steps {
+                sh '''
+                    sudo systemctl restart $SERVICE_NAME
+                '''
+            }
+        }
+
+        stage('Verify Service') {
+            steps {
+                sh '''
+                    sleep 5
+                    sudo systemctl is-active $SERVICE_NAME
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Deployment of frontend completed successfully."
+        }
+
+        failure {
+            sh '''
+                sudo systemctl status $SERVICE_NAME --no-pager || true
+            '''
+        }
+    }
+}
