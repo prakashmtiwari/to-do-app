@@ -29,7 +29,7 @@ pipeline {
             steps {
                 sh '''
                     cd $APP_DIR
-                    /home/ubuntu/.nvm/versions/node/v22.22.3/bin/npm ci 
+                    /home/ubuntu/.nvm/versions/node/v22.22.3/bin/npm i 
                 '''
             }
         }
