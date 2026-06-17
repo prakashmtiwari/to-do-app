@@ -6,3 +6,6 @@ dist/
 build/
 *.log
 todo.json
+
+
+.python-version
