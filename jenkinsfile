@@ -30,14 +30,8 @@ pipeline {
                 sh '''
                     cd $APP_DIR
 
-                    if [ ! -d "venv" ]; then
-                        python3 -m venv venv
-                    fi
-
-                    . venv/bin/activate
-
-                    pip install --upgrade pip
-                    pip install -r requirements.txt
+                    /home/ubuntu/.pyenv/shims/pip install --upgrade pip
+                    /home/ubuntu/.pyenv/shims/pip install -r requirements.txt
                 '''
             }
         }
