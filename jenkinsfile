@@ -1,0 +1,74 @@
+pipeline {
+    agent any
+
+    environment {
+        APP_DIR = "/home/ubuntu/to-do-app"
+        SERVICE_NAME = "backend.service"
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Deploy Code') {
+            steps {
+                sh '''
+                    rsync -av --delete \
+                    --exclude='.git' \
+                    --exclude='venv' \
+                    ./ $APP_DIR/
+                '''
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    cd $APP_DIR
+
+                    if [ ! -d "venv" ]; then
+                        python3 -m venv venv
+                    fi
+
+                    . venv/bin/activate
+
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Restart Application') {
+            steps {
+                sh '''
+                    sudo systemctl restart $SERVICE_NAME
+                '''
+            }
+        }
+
+        stage('Verify Service') {
+            steps {
+                sh '''
+                    sleep 5
+                    sudo systemctl is-active $SERVICE_NAME
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Deployment completed successfully"
+        }
+
+        failure {
+            sh '''
+                sudo systemctl status $SERVICE_NAME --no-pager || true
+            '''
+        }
+    }
+}
