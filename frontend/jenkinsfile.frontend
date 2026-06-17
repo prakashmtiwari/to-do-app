@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        APP_DIR = "/home/ubuntu/to-do-app/fronted"
+        APP_DIR = "/home/ubuntu/to-do-app/frontend"
         SERVICE_NAME = "frontend.service"
     }
 
