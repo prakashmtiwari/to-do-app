@@ -29,7 +29,8 @@ pipeline {
             steps {
                 sh '''
                     cd $APP_DIR
-
+                    
+                    source ../venv/bin/activate
                     /home/ubuntu/.pyenv/shims/pip install --upgrade pip
                     /home/ubuntu/.pyenv/shims/pip install -r requirements.txt
                 '''
