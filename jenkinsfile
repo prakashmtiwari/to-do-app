@@ -56,7 +56,7 @@ pipeline {
 
     post {
         success {
-            echo "Deployment completed successfully."
+            echo "Deployment of backend completed successfully."
         }
 
         failure {
