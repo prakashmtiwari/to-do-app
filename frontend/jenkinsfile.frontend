@@ -20,6 +20,8 @@ pipeline {
                     rsync -av --delete \
                     --exclude='.git' \
                     --exclude='node-modules' \
+                    --exclude='package.json'
+                    --exclude='package-lock.json'
                     ./ $APP_DIR/
                 '''
             }
