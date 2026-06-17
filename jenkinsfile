@@ -30,9 +30,8 @@ pipeline {
                 sh '''
                     cd $APP_DIR
                     
-                    source ../venv/bin/activate
-                    /home/ubuntu/.pyenv/shims/pip install --upgrade pip
-                    /home/ubuntu/.pyenv/shims/pip install -r requirements.txt
+                    ../venv/bin/pip install --upgrade pip
+                    ../venv/bin/pip install -r requirements.txt
                 '''
             }
         }
